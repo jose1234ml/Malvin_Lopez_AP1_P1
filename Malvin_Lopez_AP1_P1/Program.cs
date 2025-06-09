@@ -1,5 +1,7 @@
 using Blazored.Toast;
 using Malvin_Lopez_AP1_P1.Components;
+using Malvin_Lopez_AP1_P1.Dal;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +10,10 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 builder.Services.AddBlazoredToast();
 
+var ConStr = builder.Configuration.GetConnectionString("DefaultConnection");
+
+builder.Services.AddDbContextFactory<Contexto>(options =>
+    options.UseNpgsql(ConStr));
 
 var app = builder.Build();
 
