@@ -1,5 +1,77 @@
-﻿<h3>Crear</h3>
+﻿@page "/Aportes/Crear"
+
+@inject RegistroService registroService
+@inject NavigationManager navigationManager
+@inject IToastService toastService
+
+@rendermode InteractiveServer
+<PageTitle>Crear Aporte</PageTitle>
+
+<EditForm Model="Aporte" OnValidSubmit="Guardar" @key="Aporte">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="container card shadow-lg mt-4 p-0">
+        <header class="bg-primary text-white py-4 px-4 border-bottom d-flex justify-content-center align-items-center">
+            <h4 class="m-0">Registro de Aporte</h4>
+        </header>
+
+        <div class="card-body">
+            <div class="mb-3">
+                <label class="form-label fw-bold">Nombre</label>
+                <InputText class="form-control" @bind-Value="Aporte.Nombre" required />
+                <ValidationMessage For="(() => Aporte.Nombre)" />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Fecha</label>
+                <InputDate class="form-control" @bind-Value="Aporte.Fecha" required />
+                <ValidationMessage For="(() => Aporte.Fecha)" />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Dinero Aportado</label>
+                <InputNumber class="form-control" @bind-Value="Aporte.DineroAportes" required />
+                <ValidationMessage For="(() => Aporte.DineroAportes)" />
+            </div>
+        </div>
+
+        <div class="card-footer text-center">
+            <div class="btn-group" role="group">
+                <a href="/Aportes/Index" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left"></i> Volver
+                </a>
+                <button type="submit" class="btn btn-outline-success">
+                    <i class="bi bi-floppy"></i> Guardar
+                </button>
+                <button type="button" class="btn btn-outline-primary" @onclick="Limpiar">
+                    <i class="bi bi-arrow-clockwise"></i> Limpiar
+                </button>
+            </div>
+        </div>
+    </div>
+</EditForm>
 
 @code {
+    private RegistroAportes Aporte { get; set; } = new();
 
+    protected override void OnInitialized()
+    {
+        Aporte.Fecha = DateTime.Today;
+    }
+
+    private async Task Guardar()
+    {
+        await registroService.CrearRegistroAsync(Aporte);
+        toastService.ShowSuccess("Aporte guardado exitosamente.");
+        Limpiar();
+    }
+
+    private void Limpiar()
+    {
+        Aporte = new RegistroAportes
+            {
+                Fecha = DateTime.Today
+            };
+    }
 }
