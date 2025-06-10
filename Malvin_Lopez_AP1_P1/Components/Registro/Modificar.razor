@@ -1,5 +1,157 @@
-﻿<h3>Modificar</h3>
+﻿@page "/Aportes/Modificar/{Id:int}"
+
+@inject RegistroService RegistroService
+@inject NavigationManager navigationManager
+@inject IToastService toastService
+@rendermode InteractiveServer
+
+<PageTitle>Modificar Aporte</PageTitle>
+
+<EditForm Model="Aporte" OnValidSubmit="Actualizar">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    @if (!string.IsNullOrEmpty(Mensaje))
+    {
+        <div class="alert alert-info">@Mensaje</div>
+    }
+
+    <div class="container card shadow-lg mt-4 p-0">
+        <header class="bg-primary text-white py-4 px-4 border-bottom d-flex justify-content-center align-items-center">
+            <h4 class="m-0">Modificar Aporte</h4>
+        </header>
+
+        <div class="card-body">
+            <div class="mb-3">
+                <label class="form-label fw-bold">ID</label>
+                <InputNumber class="form-control" @bind-Value="Aporte.Id" readonly />
+            </div>
+            <div class="mb-3">
+                <label class="form-label fw-bold">Nombre</label>
+                <InputText class="form-control" @bind-Value="Aporte.Nombre" />
+            </div>
+            <div class="mb-3">
+                <label class="form-label fw-bold">Fecha</label>
+                <InputDate class="form-control" @bind-Value="Aporte.Fecha" />
+            </div>
+            <div class="mb-3">
+                <label class="form-label fw-bold">Dinero Aportado</label>
+                <InputNumber class="form-control" @bind-Value="Aporte.DineroAportes" />
+            </div>
+        </div>
+
+        <div class="card-footer text-center">
+            <div class="btn-group" role="group">
+                <button type="submit" class="btn btn-outline-info">
+                    <i class="bi bi-floppy"></i> Guardar
+                </button>
+
+                <button type="button" class="btn btn-outline-warning" @onclick="() => MostrarConfirmacion = true">
+                    <i class="bi bi-trash"></i> Eliminar
+                </button>
+
+                <a href="/Aportes/Index" class="btn btn-outline-dark">
+                    <i class="bi bi-arrow-left"></i> Volver
+                </a>
+            </div>
+        </div>
+    </div>
+</EditForm>
+@if (MostrarConfirmacion)
+{
+    <div class="modal fade show d-block bg-dark bg-opacity-50" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 rounded-4 shadow-lg border-primary">
+                <div class="card shadow-none mb-0">
+                    <div class="card-header text-center bg-primary text-white rounded-top-4">
+                        <h5 class="card-title mb-0">Eliminar Aporte</h5>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="text-center text-primary fs-5 fw-bold mb-3">
+                            ¿Está seguro de eliminar este aporte?
+                        </div>
+
+                        <div class="card shadow-sm mx-auto" style="width: 300px;">
+                            <div class="card-header bg-light fw-bold text-dark">
+                                Datos del Aporte
+                            </div>
+                            <div class="card-body text-start">
+                                <p><strong>Id Aportes:</strong> @Aporte.Id</p>
+                                <p><strong>Nombre:</strong> @Aporte.Nombre</p>
+                                <p><strong>Fecha:</strong> @Aporte.Fecha.ToShortDateString()</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-footer text-center bg-light rounded-bottom-4">
+                        <div class="btn-group" role="group">
+                            <button class="btn btn-outline-secondary" @onclick="() => MostrarConfirmacion = false">
+                                <i class="bi bi-x-circle"></i> Cancelar
+                            </button>
+                            <button class="btn btn-outline-primary" @onclick="ConfirmarEliminar">
+                                <i class="bi bi-trash"></i> Confirmar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
 
 @code {
+    [Parameter]
+    public int Id { get; set; }
 
+    private RegistroAportes Aporte { get; set; } = new();
+    private string Mensaje { get; set; } = string.Empty;
+    private bool MostrarConfirmacion { get; set; } = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var registro = await RegistroService.ObtenerPorIdAsync(Id);
+        if (registro != null)
+        {
+            Aporte = registro;
+        }
+        else
+        {
+            Mensaje = "No se encontró el aporte";
+        }
+    }
+
+    private async Task Actualizar()
+
+    {
+        Aporte.Fecha = Aporte.Fecha.ToUniversalTime();
+        var actualizado = await RegistroService.ActualizarRegistroAsync(Aporte);
+        if (actualizado)
+        {
+            toastService.ShowSuccess("Aporte actualizado correctamente");
+        }
+        else
+        {
+            toastService.ShowError("Error al actualizar el aporte");
+        }
+    }
+
+    private async Task ConfirmarEliminar()
+    {
+        MostrarConfirmacion = false;
+
+        var registros = await RegistroService.ObtenerRegistrosAsync();
+        var eliminado = registros.RemoveAll(r => r.Id == Id) > 0;
+
+        if (eliminado)
+        {
+            toastService.ShowSuccess("Aporte eliminado correctamente");
+            navigationManager.NavigateTo("/Aportes/Index");
+        }
+        else
+        {
+            toastService.ShowError("No se pudo eliminar el aporte");
+        }
+    }
 }
