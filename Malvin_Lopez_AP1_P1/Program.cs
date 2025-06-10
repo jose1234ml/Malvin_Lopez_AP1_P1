@@ -1,15 +1,10 @@
 using Blazored.Toast;
 using Malvin_Lopez_AP1_P1.Components;
-using Malvin_Lopez_AP1_P1.Dal;
-using Malvin_Lopez_AP1_P1.Services;
-using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
-builder.Services.AddBlazoredToast();
-builder.Services.AddScoped<RegistroService>();
 
 var ConStr = builder.Configuration.GetConnectionString("DefaultConnection");
 

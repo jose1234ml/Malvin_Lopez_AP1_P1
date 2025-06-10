@@ -53,19 +53,6 @@
 </EditForm>
 
 @code {
-    private RegistroAportes Aporte { get; set; } = new();
-
-    protected override void OnInitialized()
-    {
-        Aporte.Fecha = DateTime.Today;
-    }
-
-    private async Task Guardar()
-    {
-        await registroService.CrearRegistroAsync(Aporte);
-        toastService.ShowSuccess("Aporte guardado exitosamente");
-        Limpiar();
-    }
 
     private void Limpiar()
     {
