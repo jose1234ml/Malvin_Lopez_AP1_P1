@@ -1,5 +1,8 @@
 using Blazored.Toast;
 using Malvin_Lopez_AP1_P1.Components;
+using Malvin_Lopez_AP1_P1.Dal;
+using Malvin_Lopez_AP1_P1.Services; 
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +14,9 @@ var ConStr = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContextFactory<Contexto>(options =>
     options.UseNpgsql(ConStr));
 
+builder.Services.AddScoped<RegistroService>();
+builder.Services.AddBlazoredToast();
+
 var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())
@@ -20,7 +26,6 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 
 app.UseAntiforgery();
 
