@@ -10,7 +10,7 @@ public class RegistroAportes
 
     [Required(ErrorMessage = "El nombre es obligatorio")]
     [StringLength(100, ErrorMessage = "El nombre no puede tener más de 100 caracteres")]
-    [RegularExpression(@"^[^\d]*$", ErrorMessage = "El nombre no puede contener números")]
+    [RegularExpression(@"^(?=.*[a-zA-ZÁÉÍÓÚáéíóúñÑ])[a-zA-ZÁÉÍÓÚáéíóúñÑ\s]*$", ErrorMessage = "El nombre solo puede contener letras y espacios.")]
     public string Nombre { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "La fecha es obligatoria")]
