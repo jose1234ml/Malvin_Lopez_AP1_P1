@@ -42,33 +42,36 @@
 
         <div class="card-footer text-center">
             <div class="btn-group" role="group">
-                <button type="submit" class="btn btn-outline-info">
-                    <i class="bi bi-floppy"></i> Guardar
-                </button>
-
-                <button type="button" class="btn btn-outline-warning" @onclick="() => MostrarConfirmacion = true">
-                    <i class="bi bi-trash"></i> Eliminar
-                </button>
 
                 <a href="/Aportes/Index" class="btn btn-outline-dark">
                     <i class="bi bi-arrow-left"></i> Volver
                 </a>
+                <button type="submit" class="btn btn-outline-info">
+                    <i class="bi bi-floppy"></i> Guardar
+                </button>
+
+                <button type="button" class="btn btn-outline-danger" @onclick="() => MostrarConfirmacion = true">
+                    <i class="bi bi-trash"></i> Eliminar
+                </button>
+
+               
             </div>
         </div>
     </div>
 </EditForm>
+
 @if (MostrarConfirmacion)
 {
     <div class="modal fade show d-block bg-dark bg-opacity-50" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content border-0 rounded-4 shadow-lg border-primary">
+            <div class="modal-content border-0 rounded-4 shadow-lg border-danger">
                 <div class="card shadow-none mb-0">
-                    <div class="card-header text-center bg-primary text-white rounded-top-4">
+                    <div class="card-header text-center bg-danger text-white rounded-top-4">
                         <h5 class="card-title mb-0">Eliminar Aporte</h5>
                     </div>
 
                     <div class="card-body">
-                        <div class="text-center text-primary fs-5 fw-bold mb-3">
+                        <div class="text-center text-danger fs-5 fw-bold mb-3">
                             ¿Está seguro de eliminar este aporte?
                         </div>
 
@@ -89,7 +92,7 @@
                             <button class="btn btn-outline-secondary" @onclick="() => MostrarConfirmacion = false">
                                 <i class="bi bi-x-circle"></i> Cancelar
                             </button>
-                            <button class="btn btn-outline-primary" @onclick="ConfirmarEliminar">
+                            <button class="btn btn-danger" @onclick="ConfirmarEliminar">
                                 <i class="bi bi-trash"></i> Confirmar
                             </button>
                         </div>
@@ -99,7 +102,6 @@
         </div>
     </div>
 }
-
 
 @code {
     [Parameter]
@@ -123,13 +125,13 @@
     }
 
     private async Task Actualizar()
-
     {
         Aporte.Fecha = Aporte.Fecha.ToUniversalTime();
         var actualizado = await RegistroService.ActualizarRegistroAsync(Aporte);
         if (actualizado)
         {
             toastService.ShowSuccess("Aporte actualizado correctamente");
+            navigationManager.NavigateTo("/Aportes/Index");
         }
         else
         {
