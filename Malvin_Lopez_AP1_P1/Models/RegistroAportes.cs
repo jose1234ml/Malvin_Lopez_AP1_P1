@@ -18,6 +18,6 @@ public class RegistroAportes
     public DateTime Fecha { get; set; } = DateTime.Today;
 
     [Required(ErrorMessage = "Debe ingresar el monto aportado.")]
-    [Range(0.01, double.MaxValue, ErrorMessage = "El dinero aportado debe ser mayor a 0")]
+    [Range(0.01, 10000000, ErrorMessage = "El dinero aportado debe estar entre 0.01 y 10,000,000")]
     public decimal DineroAportes { get; set; }
 }
