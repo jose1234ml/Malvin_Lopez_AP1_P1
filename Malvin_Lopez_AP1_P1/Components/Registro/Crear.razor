@@ -3,6 +3,7 @@
 @inject NavigationManager NavigationManager
 @inject IToastService ToastService
 @rendermode InteractiveServer
+@using System.ComponentModel.DataAnnotations
 
 <PageTitle>Crear Aporte</PageTitle>
 
@@ -58,6 +59,17 @@
 
     private async Task GuardarAporte()
     {
+        var validationContext = new ValidationContext(NuevoAporte);
+        var validationResults = new List<ValidationResult>();
+
+        bool isValid = Validator.TryValidateObject(NuevoAporte, validationContext, validationResults, true);
+
+        if (!isValid)
+        {
+            ToastService.ShowError("Hay errores de validación en el formulario.");
+            return;
+        }
+
         await RegistroService.CrearRegistroAsync(NuevoAporte);
         ToastService.ShowSuccess("Aporte creado correctamente");
         NavigationManager.NavigateTo("/Aportes/Index");
