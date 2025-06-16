@@ -51,7 +51,7 @@
             <table class="table table-hover">
                 <thead class="table-light">
                     <tr>
-                        <th class="w-10">Id aporte</th>
+                        <th class="w-10">Id Aporte</th>
                         <th class="w-25">Nombre</th>
                         <th class="w-20">Fecha</th>
                         <th class="w-20 text-end">Dinero Aportado</th>
@@ -64,7 +64,7 @@
                         @foreach (var aporte in aportes)
                         {
                             <tr>
-                                <td>@aporte.Id aporte</td>
+                                <td>@aporte.Id </td>
                                 <td>@aporte.Nombre</td>
                                 <td>@aporte.Fecha.ToShortDateString()</td>
                                 <td class="text-end">@aporte.DineroAportes.ToString("N2")</td>
